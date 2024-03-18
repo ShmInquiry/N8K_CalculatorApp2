@@ -12,11 +12,13 @@ struct ContentView: View {
         ["C", "0", "Del", "/"],// Replaced "." with "Del" for backspace
         ["=", "."]
     ]
-    
     var body: some View {
+        ZStack {
+            Color.gray
         VStack {
             Text(displayText)
                 .font(.title)
+                .foregroundColor(.white)
                 .padding()
             
             ForEach(buttons, id: \.self) { row in
@@ -24,6 +26,7 @@ struct ContentView: View {
                     ForEach(row, id: \.self) { button in
                         Button(action: {
                             self.buttonTapped(button)
+                           // self.updateDisplay()
                         }) {
                             if button == "C" || button == "Del" {
                                 Text(button)
@@ -45,28 +48,33 @@ struct ContentView: View {
                 }
             }
         }
+        }
         .padding()
     }
     
     func buttonTapped(_ button: String) {
         switch button {
         case "0"..."9":
-            if displayText == "0" {
+            if displayText == "0" || displayText == "0.0" {
                 displayText = button
-            } else if displayText == "0.0" {
+            } else if operation.isEmpty{
                 displayText = button
-            } else {
-                displayText += button
             }
+            else {
+                if displayText.last?.isNumber == true {
+                    displayText += button
+                }
+                else {
+                displayText += " " + button
+                }
+            }
+            
         case "+", "-", "x", "/":
-            if operation.isEmpty{
-            firstOperand = Double(displayText) ?? 0
-            displayText += " \(button)"
-            } else {
-                let lastChar = displayText.removeLast()
-                firstOperand = Double(displayText) ?? 0
-                displayText = "\(firstOperand) \(button)"
-                //displayText += "\(button)"
+            if displayText.last?.isNumber == true {
+                displayText += " \(button)"
+            } else if displayText.count > 1 {
+                displayText.removeLast()
+                displayText += "\(button)"
             }
             operation = button
         case "=":
@@ -118,3 +126,11 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+/* func updateDisplay () {
+    let padding = max(0, 10 - displayText.count)
+    
+    let paddedText = String(repeating: " ", count: padding) + displayText
+    
+    displayLabel.text = paddedText
+} */
