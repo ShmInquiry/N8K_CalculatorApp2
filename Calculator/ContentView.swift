@@ -19,6 +19,7 @@ struct ContentView: View {
             Text(displayText)
                 .font(.title)
                 .foregroundColor(.white)
+                .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding()
             
             ForEach(buttons, id: \.self) { row in
@@ -50,6 +51,7 @@ struct ContentView: View {
         }
         }
         .padding()
+        .background(Color.gray)
     }
     
     func buttonTapped(_ button: String) {
