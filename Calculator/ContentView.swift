@@ -14,7 +14,7 @@ struct ContentView: View {
     ]
     var body: some View {
         ZStack {
-            Color.gray
+            Color.black
         VStack {
             Text(displayText)
                 .font(.title)
@@ -51,7 +51,7 @@ struct ContentView: View {
         }
         }
         .padding()
-        .background(Color.gray)
+        .background(Color.black)
     }
     
     func buttonTapped(_ button: String) {
@@ -60,7 +60,7 @@ struct ContentView: View {
             if displayText == "0" || displayText == "0.0" {
                 displayText = button
             } else if operation.isEmpty{
-                displayText = button
+                displayText += button //Allow multi-digit numbers without leading space
             }
             else {
                 if displayText.last?.isNumber == true {
