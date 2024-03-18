@@ -9,7 +9,8 @@ struct ContentView: View {
         ["7", "8", "9", "+"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "x"],
-        ["C", "0", "Del", "/", "="] // Replaced "." with "Del" for backspace
+        ["C", "0", "Del", "/"],// Replaced "." with "Del" for backspace
+        ["=", "."]
     ]
     
     var body: some View {
@@ -28,14 +29,14 @@ struct ContentView: View {
                                 Text(button)
                                     .font(.title)
                                     .frame(width: 80, height: 80)
-                                    .background(button == "C" ? Color.red : Color.gray)
+                                    .background(button == "C" ? Color.red : Color.green)
                                     .cornerRadius(40)
                                     .foregroundColor(.white)
                             } else {
                                 Text(button)
                                     .font(.title)
                                     .frame(width: 80, height: 80)
-                                    .background(Color.gray)
+                                    .background(Color.green)
                                     .cornerRadius(40)
                                     .foregroundColor(.white)
                             }
@@ -52,14 +53,35 @@ struct ContentView: View {
         case "0"..."9":
             if displayText == "0" {
                 displayText = button
+            } else if displayText == "0.0" {
+                displayText = button
             } else {
                 displayText += button
             }
         case "+", "-", "x", "/":
+            if operation.isEmpty{
             firstOperand = Double(displayText) ?? 0
+            displayText += " \(button)"
+            } else {
+                let lastChar = displayText.removeLast()
+                firstOperand = Double(displayText) ?? 0
+                displayText = "\(firstOperand) \(button)"
+                //displayText += "\(button)"
+            }
             operation = button
-            displayText = "0"
         case "=":
+            if !operation.isEmpty {
+                let expression = displayText.replacingOccurrences(of: "x", with: "*")
+                let result = NSExpression(format: expression).expressionValue(with: nil, context: nil) as? Double ?? 0
+                
+                if result.truncatingRemainder(dividingBy: 1) == 0 {
+                    displayText = "\(Int(result))"
+                }
+                else {
+                    displayText = "\(result)"
+                }
+                operation = ""
+            }
             secondOperand = Double(displayText) ?? 0
             switch operation {
             case "+":
@@ -78,7 +100,8 @@ struct ContentView: View {
             break
         case "C":
             displayText = "0"
-        case "B":
+            operation = ""
+        case "Del":
             if displayText.count > 1 {
                 displayText.removeLast()
             } else {
