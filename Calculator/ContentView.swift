@@ -6,10 +6,10 @@ struct ContentView: View {
     @State private var secondOperand = 0.0
     @State private var operation = ""
     let buttons = [
-        ["7", "8", "9", "+"],
+        ["C", "8", "Del", "+"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "x"],
-        ["C", "0", "Del", "/"],// Replaced "." with "Del" for backspace
+        ["7", "0", "9", "/"],// Replaced "." with "Del" for backspace
         ["=", "."]
     ]
     var body: some View {
